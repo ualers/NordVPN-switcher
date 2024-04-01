@@ -1,6 +1,6 @@
-### New version made by the community: 0.4.0
+### New version made by the community: 0.3.1
 ***(21/03/2024)***
-Updates for version 0.4.0:
+Updates for version 0.3.1:
 * **The old NordVPN API endpoint**: https://nordvpn.com/api/server has been deprecated and now returns {"status": "deprecated"}. As a result, the program is currently not functioning properly.
 
 This new version of the function (get_nordvpn_servers) was made with chatgpt artificial intelligence
