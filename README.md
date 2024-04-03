@@ -1,89 +1,429 @@
+### New version made by the community: 0.3.3
+***(03/04/2024)***
+Updates for version 0.3.3:
+* **IP rotation based on time zone and language**: Aggregation in the demo.py file IP rotation based on time zone and language (main use is in selenium automation)
+    
+    ```
+        def modulo_rotation_by_timezone():
+    
+            timezone_language_mapping = {
+                "America/New_York": ["EN-US", "en"],
+                "America/Chicago": ["EN-US", "en"],
+                "America/Denver": ["EN-US", "en"],
+                "America/Los_Angeles": ["EN-US", "en"],
+                "America/Seattle": ["EN-US", "en"],
+                "America/Salt_Lake_City": ["EN-US", "en"],
+                "America/San_Francisco": ["EN-US", "en"],
+                "America/Dallas": ["EN-US", "en"],
+                "America/Kansas_City": ["EN-US", "en"],
+                "America/Saint_Louis": ["EN-US", "en"],
+                "America/Atlanta": ["EN-US", "en"],
+                "America/Charlotte": ["EN-US", "en"],
+                "America/Miami": ["EN-US", "en"],
+                "America/Manassas": ["EN-US", "en"],
+                "America/Buffalo": ["EN-US", "en"],
+                "America/Phoenix": ["EN-US", "en"],
+                "America/Argentina/Buenos_Aires": ["ES-AR", "es"],
+                "America/Sao_Paulo": ["PT-BR", "pt"],
+                "America/Mexico_City": ["ES-MX", "es"],
+                "America/Santiago": ["ES-CL", "es"],
+                "America/Toronto": ["EN-CA", "en"],
+                "America/Vancouver": ["EN-CA", "en"],
+                "Europe/London": ["EN-GB", "en"],
+                "Europe/Paris": ["FR-FR", "fr"],
+                "Europe/Madrid": ["ES-ES", "es"],
+                "Europe/Rome": ["IT-IT", "it"],
+                "Australia/Sydney": ["EN-AU", "en"],
+                "New_Zealand": ["EN-NZ", "en"],
+                "North_America/Ottawa": ["EN-CA", "en"],
+                "North_America/Havana": ["ES-CU", "es"],
+    
+            }
+    
+            vpn_options = {
+                "America/New_York": ["New York,Manassas"],
+                "America/Chicago": ["Chicago,Saint Louis"],
+                "America/Denver": ["Denver,Chicago"],
+                "America/Los_Angeles": ["Los Angeles,Phoenix"],
+                "America/Seattle": ["Seattle,Vancouver"],
+                "America/Salt_Lake_City": ["Salt Lake City,Denver"],
+                "America/San_Francisco": ["San Francisco,Los Angeles,Salt Lake City"],
+                "America/Dallas": ["Dallas,Chicago"],
+                "America/Kansas_City": ["Chicago,Saint Louis"],
+                "America/Saint_Louis": ["Saint Louis,Dallas"],
+                "America/Atlanta": ["Atlanta,Charlotte"],
+                "America/Charlotte": ["Charlotte,Manassas,New York"],
+                "America/Miami": ["Miami,Atlanta,Charlotte"],
+                "America/Manassas": ["Manassas,New York"],
+                "America/Buffalo": ["Buffalo,New York"],
+                "America/Phoenix": ["Phoenix,Los Angeles"],
+                "America/Argentina/Buenos_Aires": ["Argentina,Chile"],
+                "America/Sao_Paulo": ["Brazil,Argentina"],
+                "America/Mexico_City": ["Mexico,Costa rica"],
+                "America/Santiago": ["Chile,Argentina"],
+                "America/Toronto": ["Toronto,Buffalo"],
+                "America/Vancouver": ["Vancouver,Seattle"],
+                "Europe/London": ["United Kingdom,Spain"],
+                "Europe/Paris": ["Vancouver,Buffalo"],
+                "Europe/Madrid": ["Spain,Los Angeles"],
+                "Europe/Rome": ["Italy,Los Angeles"],
+                "Australia/Sydney": ["New Zealand,Sydney"],
+                "New_Zealand": ["New Zealand,Sydney"],
+                "North_America/Ottawa": ["Vancouver,Montreal"],
+                "North_America/Havana": ["Montreal,Seattle"],
+    
+            }
+    
+            def choose_timezone_and_language():
+                timezone = random.choice(list(timezone_language_mapping.keys()))
+                languages_stealth = timezone_language_mapping[timezone]
+                languages_lang = timezone_language_mapping[timezone][1]
+                return timezone, languages_stealth, languages_lang
+    
+            timezonex, languagesx, languages_lang = choose_timezone_and_language()
+            print("Timezone selecionado:", timezonex)
+            print("Idioma do stealth:", languagesx)
+            print("Idioma do lang:", languages_lang)
+    
+            vpn_options_for_timezone = vpn_options.get(timezonex, [])
+            if vpn_options_for_timezone:
+                random_a = random.random()
+                if random_a > 0.5:
+                    vpn_option = random.choice(vpn_options_for_timezone)
+                else:
+                    vpn_option = random.choice(vpn_options_for_timezone)
+                    vpn_option = random.choice(vpn_options_for_timezone)   
+                try:
+                    print(F" Rotação de ip em progresso  ")
+                    vpn_instruction = initialize_VPN(area_input=[vpn_option])
+                    rotate_VPN(instructions=vpn_instruction)
+                    print(F" Rotação de ip concluida  ")
+                    print(F" Aguardando 10 segundos ")
+                    time.sleep(10)
+                    return True, timezonex, languagesx, languages_lang
+                except Exception as e:
+                    print(f"Erro ao conectar via VPN: {e}")
+                    print("Reiniciando conexão VPN...")
+                    terminate_VPN(instructions=vpn_instruction)
+                    
+                    timezonex, languagesx, languages_lang = choose_timezone_and_language()
+                    print("Timezone 2  selecionado:", timezonex)
+                    print("Idioma do stealth 2:", languagesx)
+                    print("Idioma do lang 2 :", languages_lang)
+    
+                    vpn_options_for_timezone = vpn_options.get(timezonex, [])
+                    if vpn_options_for_timezone:
+                        vpn_option = random.choice(vpn_options_for_timezone)
+                        try:
+                            print(F" Rotação de ip em progresso 2 ")
+                            vpn_instruction2 = initialize_VPN(area_input=[vpn_option])
+                            rotate_VPN(instructions=vpn_instruction2)
+                            print(F" Rotação de ip concluida  2")
+                            print(F" Aguardando 10 segundos 2 ")
+                            time.sleep(10)
+                            return True, timezonex, languagesx, languages_lang
+                        except Exception as e:
+                            print(f"Erro ao conectar via VPN: {e}")
+                            print("Reiniciando conexão VPN...")
+                            #terminate_VPN(instructions=vpn_instruction2)
+                            return False    
+    ```
+     * **example case use**: 
+        ```
+            def stealth_chrome_1(languagesx, timezonex, languages_lang):
+                teste = random.randint(1, 530)
+                browser = "Arquivos/Dependencias/113/chrome.exe" #os.path.join(diretorio_script, 'Dependencias', '113', 'chrome.exe')
+                caminho_perfil = os.path.join(diretorio_script, 'Perfil_padrao')
+                caminho_variacoes = os.path.join(diretorio_script, 'Perfil_variacoes', f'Perfil_{teste}')
+        
+                try:
+                    os.makedirs(caminho_variacoes, exist_ok=True)
+                    shutil.rmtree(caminho_variacoes)
+                    shutil.copytree(caminho_perfil, caminho_variacoes)
+                except Exception as errore_:
+                    pass
+                chrome_options = uc.ChromeOptions()
+                user_agentc = UserAgent()
+                chrome_114_user_agent = user_agentc.chrome
+                user_agentx = chrome_114_user_agent.replace("Chrome/114.0", "Chrome/113.0.5672.127").replace("Chrome/109.0.0.0", "Chrome/113.0.5672.127").replace("Chrome/115.0", "Chrome/113.0.5672.127").replace("Chrome/116.0", "Chrome/113.0.5672.127").replace("Chrome/117.0", "Chrome/113.0.5672.127").replace("Chrome/118.0.0.0", "Chrome/113.0.5672.127").replace("Chrome/119.0.0.0", "Chrome/113.0.5672.127").replace("Chrome/120.0.0.0", "Chrome/113.0.5672.127")
+                stealth_configs = [
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Intel Inc.", "renderer": "Intel Iris OpenGL Engine", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1070", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 970", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 960", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1060", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1650", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 5700 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Apple Inc.", "renderer": "Apple GPU", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Qualcomm", "renderer": "Adreno 650", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "ATI Technologies", "renderer": "Radeon HD 7850", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "ARM", "renderer": "Mali-G78 MP14", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "PowerVR", "renderer": "PowerVR GM9446", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Broadcom", "renderer": "VideoCore VI", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Samsung Electronics", "renderer": "Mali-G77 MP11", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1070", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 970", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 960", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1060", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1650", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3060", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3070", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3080", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3090", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6900 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6800 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6700 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6600 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6500 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX Vega 64", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX Vega 56", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 590", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 580", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 570", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 560", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 550", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 540", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 530", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 520", "fix_hairline": True},
+                ]
+        
+                random.shuffle(stealth_configs)
+                def stealth_fig(driver, user_agent, languages, vendor, platform, webgl_vendor, renderer, fix_hairline):
+                        stealth(driver,
+                                user_agent=user_agent,
+                                languages=languages,
+                                vendor=vendor,
+                                platform=platform,
+                                webgl_vendor=webgl_vendor,
+                                renderer=renderer,
+                                fix_hairline=fix_hairline,
+                                )
+        
+                try:
+        
+                        chrome_options.add_argument(f'--timezone={timezonex}')
+                        chrome_options.add_argument(f'--lang={languages_lang}')
+                except:
+                        pass
+                driver = uc.Chrome(browser_executable_path=browser, user_data_dir=caminho_variacoes, options=chrome_options, version_main=113)
+        
+                stealth_fig(driver,
+                        user_agent=stealth_configs[0]["user_agent"],
+                        languages=stealth_configs[0]["languages"],  
+                        vendor=stealth_configs[0]["vendor"],
+                        platform=stealth_configs[0]["platform"],
+                        webgl_vendor=stealth_configs[0]["webgl_vendor"],
+                        renderer=stealth_configs[0]["renderer"],
+                        fix_hairline=stealth_configs[0]["fix_hairline"],
+                )
+                driver.maximize_window()
+                return driver
+        ```
+    
+
+###
+###
+###
 ### New version made by the community: 0.3.2
 ***(03/04/2024)***
 Updates for version 0.3.2:
-* **IP rotation on all ips in the US**: Aggregation in the demo.py file IP rotation based on time zone and language usa
-
-```
-def modulo_rotation_by_usa():
-    timezone_language_mapping = {
-        "America/New_York": ["EN-US", "en"],
-        "America/Chicago": ["EN-US", "en"],
-        "America/Denver": ["EN-US", "en"],
-        "America/Los_Angeles": ["EN-US", "en"],
-        "America/Seattle": ["EN-US", "en"],
-        "America/Salt_Lake_City": ["EN-US", "en"],
-        "America/San_Francisco": ["EN-US", "en"],
-        "America/Dallas": ["EN-US", "en"],
-        "America/Kansas_City": ["EN-US", "en"],
-        "America/Saint_Louis": ["EN-US", "en"],
-        "America/Atlanta": ["EN-US", "en"],
-        "America/Charlotte": ["EN-US", "en"],
-        "America/Miami": ["EN-US", "en"],
-        "America/Manassas": ["EN-US", "en"],
-        "America/Buffalo": ["EN-US", "en"],
-        "America/Phoenix": ["EN-US", "en"],
-    }
-    vpn_options = {
-        "America/New_York": ["New York,Manassas"],
-        "America/Chicago": ["Chicago,Saint Louis"],
-        "America/Denver": ["Denver,Chicago"],
-        "America/Los_Angeles": ["Los Angeles,Phoenix"],
-        "America/Seattle": ["Seattle,Vancouver"],
-        "America/Salt_Lake_City": ["Salt Lake City,Denver"],
-        "America/San_Francisco": ["San Francisco,Los Angeles,Salt Lake City"],
-        "America/Dallas": ["Dallas,Chicago"],
-        "America/Kansas_City": ["Chicago,Saint Louis"],
-        "America/Saint_Louis": ["Saint Louis,Dallas"],
-        "America/Atlanta": ["Atlanta,Charlotte"],
-        "America/Charlotte": ["Charlotte,Manassas,New York"],
-        "America/Miami": ["Miami,Atlanta,Charlotte"],
-        "America/Manassas": ["Manassas,New York"],
-        "America/Buffalo": ["Buffalo,New York"],
-        "America/Phoenix": ["Phoenix,Los Angeles"],
-        }
-
-    def choose_timezone_and_language():
-        timezone = random.choice(list(timezone_language_mapping.keys()))
-        languages_stealth = timezone_language_mapping[timezone]
-        languages_lang = timezone_language_mapping[timezone][1]
-        return timezone, languages_stealth, languages_lang
-
-    timezonex, languagesx, languages_lang = choose_timezone_and_language()
-    print("Timezone selecionado:", timezonex)
-    print("Idioma do stealth:", languagesx)
-    print("Idioma do lang:", languages_lang)
-    while True:
-            
-        start_time = time.time()
+* **IP rotation on all ips in the US**: Aggregation in the demo.py file IP rotation based on time zone and language usa (main use is in selenium automation)
     
-        vpn_options_for_timezone = vpn_options.get(timezonex, [])
-        if vpn_options_for_timezone:
-            random_a = random.random()
-            if random_a > 0.5:
-                vpn_option = random.choice(vpn_options_for_timezone)
-            else:
-                vpn_option = random.choice(vpn_options_for_timezone)
-                vpn_option = random.choice(vpn_options_for_timezone)   
-            try:
-                print(F" Rotação de ip em progresso  ")
-                vpn_instruction = initialize_VPN(area_input=[vpn_option])
-                rotate_VPN(instructions=vpn_instruction)
-                print(F" Rotação de ip concluida  ")
-                print(F" Aguardando 10 segundos ")
-                time.sleep(10)
+    ```
+    def modulo_rotation_by_usa():
+        timezone_language_mapping = {
+            "America/New_York": ["EN-US", "en"],
+            "America/Chicago": ["EN-US", "en"],
+            "America/Denver": ["EN-US", "en"],
+            "America/Los_Angeles": ["EN-US", "en"],
+            "America/Seattle": ["EN-US", "en"],
+            "America/Salt_Lake_City": ["EN-US", "en"],
+            "America/San_Francisco": ["EN-US", "en"],
+            "America/Dallas": ["EN-US", "en"],
+            "America/Kansas_City": ["EN-US", "en"],
+            "America/Saint_Louis": ["EN-US", "en"],
+            "America/Atlanta": ["EN-US", "en"],
+            "America/Charlotte": ["EN-US", "en"],
+            "America/Miami": ["EN-US", "en"],
+            "America/Manassas": ["EN-US", "en"],
+            "America/Buffalo": ["EN-US", "en"],
+            "America/Phoenix": ["EN-US", "en"],
+        }
+        vpn_options = {
+            "America/New_York": ["New York,Manassas"],
+            "America/Chicago": ["Chicago,Saint Louis"],
+            "America/Denver": ["Denver,Chicago"],
+            "America/Los_Angeles": ["Los Angeles,Phoenix"],
+            "America/Seattle": ["Seattle,Vancouver"],
+            "America/Salt_Lake_City": ["Salt Lake City,Denver"],
+            "America/San_Francisco": ["San Francisco,Los Angeles,Salt Lake City"],
+            "America/Dallas": ["Dallas,Chicago"],
+            "America/Kansas_City": ["Chicago,Saint Louis"],
+            "America/Saint_Louis": ["Saint Louis,Dallas"],
+            "America/Atlanta": ["Atlanta,Charlotte"],
+            "America/Charlotte": ["Charlotte,Manassas,New York"],
+            "America/Miami": ["Miami,Atlanta,Charlotte"],
+            "America/Manassas": ["Manassas,New York"],
+            "America/Buffalo": ["Buffalo,New York"],
+            "America/Phoenix": ["Phoenix,Los Angeles"],
+            }
+    
+        def choose_timezone_and_language():
+            timezone = random.choice(list(timezone_language_mapping.keys()))
+            languages_stealth = timezone_language_mapping[timezone]
+            languages_lang = timezone_language_mapping[timezone][1]
+            return timezone, languages_stealth, languages_lang
+    
+        timezonex, languagesx, languages_lang = choose_timezone_and_language()
+        print("Timezone selecionado:", timezonex)
+        print("Idioma do stealth:", languagesx)
+        print("Idioma do lang:", languages_lang)
+        while True:
                 
-                return True, timezonex, languagesx, languages_lang
-            except Exception as e:
-                print(f"Erro ao conectar via VPN: {e}")
-            end_controler = time.time()
-            end_fim = end_controler - start_time
-            if int(end_fim) >= 20:
-                continue
-            print(end_fim)
-            time.sleep(1)   
-```
- 
-
+            start_time = time.time()
+        
+            vpn_options_for_timezone = vpn_options.get(timezonex, [])
+            if vpn_options_for_timezone:
+                random_a = random.random()
+                if random_a > 0.5:
+                    vpn_option = random.choice(vpn_options_for_timezone)
+                else:
+                    vpn_option = random.choice(vpn_options_for_timezone)
+                    vpn_option = random.choice(vpn_options_for_timezone)   
+                try:
+                    print(F" Rotação de ip em progresso  ")
+                    vpn_instruction = initialize_VPN(area_input=[vpn_option])
+                    rotate_VPN(instructions=vpn_instruction)
+                    print(F" Rotação de ip concluida  ")
+                    print(F" Aguardando 10 segundos ")
+                    time.sleep(10)
+                    
+                    return True, timezonex, languagesx, languages_lang
+                except Exception as e:
+                    print(f"Erro ao conectar via VPN: {e}")
+                end_controler = time.time()
+                end_fim = end_controler - start_time
+                if int(end_fim) >= 20:
+                    continue
+                print(end_fim)
+                time.sleep(1)   
+    ```
+    * **example case use**: 
+        ```
+            def stealth_chrome_1(languagesx, timezonex, languages_lang):
+                teste = random.randint(1, 530)
+                browser = "Arquivos/Dependencias/113/chrome.exe" #os.path.join(diretorio_script, 'Dependencias', '113', 'chrome.exe')
+                caminho_perfil = os.path.join(diretorio_script, 'Perfil_padrao')
+                caminho_variacoes = os.path.join(diretorio_script, 'Perfil_variacoes', f'Perfil_{teste}')
+        
+                try:
+                    os.makedirs(caminho_variacoes, exist_ok=True)
+                    shutil.rmtree(caminho_variacoes)
+                    shutil.copytree(caminho_perfil, caminho_variacoes)
+                except Exception as errore_:
+                    pass
+                chrome_options = uc.ChromeOptions()
+                user_agentc = UserAgent()
+                chrome_114_user_agent = user_agentc.chrome
+                user_agentx = chrome_114_user_agent.replace("Chrome/114.0", "Chrome/113.0.5672.127").replace("Chrome/109.0.0.0", "Chrome/113.0.5672.127").replace("Chrome/115.0", "Chrome/113.0.5672.127").replace("Chrome/116.0", "Chrome/113.0.5672.127").replace("Chrome/117.0", "Chrome/113.0.5672.127").replace("Chrome/118.0.0.0", "Chrome/113.0.5672.127").replace("Chrome/119.0.0.0", "Chrome/113.0.5672.127").replace("Chrome/120.0.0.0", "Chrome/113.0.5672.127")
+                stealth_configs = [
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Intel Inc.", "renderer": "Intel Iris OpenGL Engine", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1070", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 970", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 960", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1060", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1650", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 5700 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Apple Inc.", "renderer": "Apple GPU", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Qualcomm", "renderer": "Adreno 650", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "ATI Technologies", "renderer": "Radeon HD 7850", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "ARM", "renderer": "Mali-G78 MP14", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "PowerVR", "renderer": "PowerVR GM9446", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Broadcom", "renderer": "VideoCore VI", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "Samsung Electronics", "renderer": "Mali-G77 MP11", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1070", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 980 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1080 Ti", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 970", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 960", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1060", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce GTX 1650", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3050", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3060", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3070", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3080", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "NVIDIA Corporation", "renderer": "GeForce RTX 3090", "fix_hairline": False},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6900 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6800 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6700 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6600 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 6500 XT", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX Vega 64", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX Vega 56", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 590", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 580", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 570", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 560", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 550", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 540", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 530", "fix_hairline": True},
+                        {"user_agent": f"{user_agentx}", "languages": f"{languagesx}", "vendor": "Google Inc.", "platform": "Win64", "webgl_vendor": "AMD", "renderer": "Radeon RX 520", "fix_hairline": True},
+                ]
+        
+                random.shuffle(stealth_configs)
+                def stealth_fig(driver, user_agent, languages, vendor, platform, webgl_vendor, renderer, fix_hairline):
+                        stealth(driver,
+                                user_agent=user_agent,
+                                languages=languages,
+                                vendor=vendor,
+                                platform=platform,
+                                webgl_vendor=webgl_vendor,
+                                renderer=renderer,
+                                fix_hairline=fix_hairline,
+                                )
+        
+                try:
+        
+                        chrome_options.add_argument(f'--timezone={timezonex}')
+                        chrome_options.add_argument(f'--lang={languages_lang}')
+                except:
+                        pass
+                driver = uc.Chrome(browser_executable_path=browser, user_data_dir=caminho_variacoes, options=chrome_options, version_main=113)
+        
+                stealth_fig(driver,
+                        user_agent=stealth_configs[0]["user_agent"],
+                        languages=stealth_configs[0]["languages"],  
+                        vendor=stealth_configs[0]["vendor"],
+                        platform=stealth_configs[0]["platform"],
+                        webgl_vendor=stealth_configs[0]["webgl_vendor"],
+                        renderer=stealth_configs[0]["renderer"],
+                        fix_hairline=stealth_configs[0]["fix_hairline"],
+                )
+                driver.maximize_window()
+                return driver
+        ```
+    
 
 ###
 ###
