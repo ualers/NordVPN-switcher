@@ -130,6 +130,13 @@ Updates for version 0.3.3:
     ```
      * **example case use**: 
         ```
+            import random
+            import os
+            import shutil
+            import undetected_chromedriver as uc
+            from fake_useragent import UserAgent
+            from selenium_stealth import stealth
+
             def stealth_chrome_1(languagesx, timezonex, languages_lang):
                 teste = random.randint(1, 530)
                 browser = "Arquivos/Dependencias/113/chrome.exe" #os.path.join(diretorio_script, 'Dependencias', '113', 'chrome.exe')
@@ -322,6 +329,13 @@ Updates for version 0.3.2:
     ```
     * **example case use**: 
         ```
+            import random
+            import os
+            import shutil
+            import undetected_chromedriver as uc
+            from fake_useragent import UserAgent
+            from selenium_stealth import stealth
+
             def stealth_chrome_1(languagesx, timezonex, languages_lang):
                 teste = random.randint(1, 530)
                 browser = "Arquivos/Dependencias/113/chrome.exe" #os.path.join(diretorio_script, 'Dependencias', '113', 'chrome.exe')
