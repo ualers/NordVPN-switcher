@@ -1,3 +1,93 @@
+### New version made by the community: 0.3.2
+***(03/04/2024)***
+Updates for version 0.3.2:
+* **IP rotation on all ips in the US**: Aggregation in the demo.py file IP rotation based on time zone and language usa
+
+```
+def modulo_rotation_by_usa():
+    timezone_language_mapping = {
+        "America/New_York": ["EN-US", "en"],
+        "America/Chicago": ["EN-US", "en"],
+        "America/Denver": ["EN-US", "en"],
+        "America/Los_Angeles": ["EN-US", "en"],
+        "America/Seattle": ["EN-US", "en"],
+        "America/Salt_Lake_City": ["EN-US", "en"],
+        "America/San_Francisco": ["EN-US", "en"],
+        "America/Dallas": ["EN-US", "en"],
+        "America/Kansas_City": ["EN-US", "en"],
+        "America/Saint_Louis": ["EN-US", "en"],
+        "America/Atlanta": ["EN-US", "en"],
+        "America/Charlotte": ["EN-US", "en"],
+        "America/Miami": ["EN-US", "en"],
+        "America/Manassas": ["EN-US", "en"],
+        "America/Buffalo": ["EN-US", "en"],
+        "America/Phoenix": ["EN-US", "en"],
+    }
+    vpn_options = {
+        "America/New_York": ["New York,Manassas"],
+        "America/Chicago": ["Chicago,Saint Louis"],
+        "America/Denver": ["Denver,Chicago"],
+        "America/Los_Angeles": ["Los Angeles,Phoenix"],
+        "America/Seattle": ["Seattle,Vancouver"],
+        "America/Salt_Lake_City": ["Salt Lake City,Denver"],
+        "America/San_Francisco": ["San Francisco,Los Angeles,Salt Lake City"],
+        "America/Dallas": ["Dallas,Chicago"],
+        "America/Kansas_City": ["Chicago,Saint Louis"],
+        "America/Saint_Louis": ["Saint Louis,Dallas"],
+        "America/Atlanta": ["Atlanta,Charlotte"],
+        "America/Charlotte": ["Charlotte,Manassas,New York"],
+        "America/Miami": ["Miami,Atlanta,Charlotte"],
+        "America/Manassas": ["Manassas,New York"],
+        "America/Buffalo": ["Buffalo,New York"],
+        "America/Phoenix": ["Phoenix,Los Angeles"],
+        }
+
+    def choose_timezone_and_language():
+        timezone = random.choice(list(timezone_language_mapping.keys()))
+        languages_stealth = timezone_language_mapping[timezone]
+        languages_lang = timezone_language_mapping[timezone][1]
+        return timezone, languages_stealth, languages_lang
+
+    timezonex, languagesx, languages_lang = choose_timezone_and_language()
+    print("Timezone selecionado:", timezonex)
+    print("Idioma do stealth:", languagesx)
+    print("Idioma do lang:", languages_lang)
+    while True:
+            
+        start_time = time.time()
+    
+        vpn_options_for_timezone = vpn_options.get(timezonex, [])
+        if vpn_options_for_timezone:
+            random_a = random.random()
+            if random_a > 0.5:
+                vpn_option = random.choice(vpn_options_for_timezone)
+            else:
+                vpn_option = random.choice(vpn_options_for_timezone)
+                vpn_option = random.choice(vpn_options_for_timezone)   
+            try:
+                print(F" Rotação de ip em progresso  ")
+                vpn_instruction = initialize_VPN(area_input=[vpn_option])
+                rotate_VPN(instructions=vpn_instruction)
+                print(F" Rotação de ip concluida  ")
+                print(F" Aguardando 10 segundos ")
+                time.sleep(10)
+                
+                return True, timezonex, languagesx, languages_lang
+            except Exception as e:
+                print(f"Erro ao conectar via VPN: {e}")
+            end_controler = time.time()
+            end_fim = end_controler - start_time
+            if int(end_fim) >= 20:
+                continue
+            print(end_fim)
+            time.sleep(1)   
+```
+ 
+
+
+###
+###
+###
 ### New version made by the community: 0.3.1
 ***(21/03/2024)***
 Updates for version 0.3.1:
